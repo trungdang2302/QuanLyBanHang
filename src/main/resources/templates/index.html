@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+    xmlns:th="http://www.thymeleaf.org" 
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+   <head>
+      <title>Quan Ly Hang Hoa</title>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.js"></script>
+      <script th:src="@{/main.js}"></script>
+      <link th:href="@{/main.css}" rel="stylesheet" />
+   </head>
+
+   <body ng-app="ProductManagement" ng-controller="ProductController">
+      <h3>
+         He Thong Quan Ly Hang Hoa
+      </h3>
+      <form ng-submit="submitProduct()">
+         <table border="0">
+            <tr>
+               <td>ProductID</td>
+               <td>{{productForm.ID}}</td>
+			<td><input type="text" ng-model="productForm.ID" style="display: none"/></td>
+            </tr>
+            <tr>
+               <td>Product Name</td>
+               <td><input type="text" ng-model="productForm.Name" /></td>
+            </tr>
+            <tr>
+               <td>Product Description</td>
+               <td><input type="text" ng-model="productForm.Description" /></td>
+            </tr>
+			<tr>
+               <td>Product URL</td>
+               <td><input type="text" ng-model="productForm.URL" /></td>
+            </tr>
+            <tr>
+               <td colspan="2">
+                  <input type="submit" value="Submit" class="blue-button" />
+               </td>
+            </tr>
+         </table>
+      </form>
+      <br/>
+
+      <a class="create-button" ng-click="createProduct()">Create Product</a>
+
+      <table border="1">
+         <tr>
+            <th>Product Id</th>
+            <th>Product Name</th>
+            <th>Product Description</th>
+            <th>Product URL</th>
+            <th>Edit</th>
+            <th>Delete</th>
+         </tr>
+		 <!-- $scope.products -->
+         <tr ng-repeat="product in products">
+            <td> {{ product.id }}</td>
+            <td> {{ product.name }}</td>
+            <td >{{ product.description }}</td>
+            <td >{{ product.url }}</td>
+            <td>
+            <a ng-click="editProduct(product)" class="edit-button">Edit</a>
+            </td>
+            <td>
+            <a ng-click="deleteProduct(product)" class="delete-button">Delete</a>
+            </td>
+         </tr>
+      </table>
+   </body>
+</html>
