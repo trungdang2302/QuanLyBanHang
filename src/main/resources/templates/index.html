@@ -15,11 +15,12 @@
          He Thong Quan Ly Hang Hoa
       </h3>
       <form ng-submit="submitProduct()">
+		 
          <table border="0">
             <tr>
                <td>ProductID</td>
                <td>{{productForm.ID}}</td>
-			<td><input type="text" ng-model="productForm.ID" style="display: none"/></td>
+			<td><input type="text" ng-model="productForm.ID" style="display: none" /></td>
             </tr>
             <tr>
                <td>Product Name</td>
@@ -31,8 +32,11 @@
             </tr>
 			<tr>
                <td>Product URL</td>
-               <td><input type="text" ng-model="productForm.URL" /></td>
-            </tr>
+               <td>
+					<input id="example-file" type="file" file-model="myForm.files[0]" fileread="uploadme"/>
+					<img src="{{uploadme}}" width="200" height="100" alt="Image preview...">
+				</td>
+            </tr>		
             <tr>
                <td colspan="2">
                   <input type="submit" value="Submit" class="blue-button" />
@@ -58,7 +62,9 @@
             <td> {{ product.id }}</td>
             <td> {{ product.name }}</td>
             <td >{{ product.description }}</td>
-            <td >{{ product.url }}</td>
+            <td >{{ product.url }}
+				<img src="../static/images/{{ product.url }}" th:src="@{images/{{ product.url }}}" width="300" height="150"></td>
+			</td>
             <td>
             <a ng-click="editProduct(product)" class="edit-button">Edit</a>
             </td>

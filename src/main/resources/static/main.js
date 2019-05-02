@@ -2,7 +2,14 @@ var app = angular.module("ProductManagement", []);
 
 app.controller("ProductController", function($scope, $http) {
 
-	$scope.products = [];
+	$scope.uploadme;
+	
+	$scope.uploadResult ="";
+    $scope.myForm = {
+        files: []
+    }
+    
+    $scope.products = [];
 	$scope.productForm = {
 		ID : -1,
 		Name : "",
@@ -14,6 +21,34 @@ app.controller("ProductController", function($scope, $http) {
 
 	// Add or Update Product
 	$scope.submitProduct = function() {
+		
+		//save file to Images
+		var url = "/rest/uploadMultiFiles";
+        var data = new FormData();
+ 
+        for (i = 0; i < $scope.myForm.files.length; i++) {
+            data.append("files", $scope.myForm.files[i]);
+        }
+ 
+        var config = {
+            transformRequest: angular.identity,
+            transformResponse: angular.identity,
+            headers: {
+                'Content-Type': undefined
+            }
+        }
+        
+        $http.post(url, data, config).then(
+            // Success
+            function(response) {
+                $scope.uploadResult =  response.data;
+            },
+            // Error
+            function(response) {
+                $scope.uploadResult = response.data;
+            });
+        
+		//Update infor
 		var method = "";
 
 		if ($scope.productForm.ID == -1) {
@@ -26,7 +61,7 @@ app.controller("ProductController", function($scope, $http) {
 			ID : $scope.productForm.ID,
 			Name :$scope.productForm.Name ,
 			Description : $scope.productForm.Description,
-			URL : $scope.productForm.URL
+			URL : $scope.myForm.files[0].name
 		};
 
 		$http({
@@ -54,7 +89,8 @@ app.controller("ProductController", function($scope, $http) {
 		$scope.productForm.ID = product.id;
 		$scope.productForm.Name = product.name;
 		$scope.productForm.Description = product.description;
-		$scope.productForm.URL = product.url;
+		$scope.productForm.URL = myForm.files[0];
+		$scope.uploadme = product.url;
 	};
 
 	// Get product
@@ -88,9 +124,49 @@ app.controller("ProductController", function($scope, $http) {
 	function _clearFormData() {
 		$scope.productForm.ID = -1;
 		$scope.productForm.Name = "";
-		$scope.productForm.Description = ""
-		$scope.productForm.URL = ""
+		$scope.productForm.Description = "";
+		$scope.productForm.URL = "";
+		$scope.uploadme = null;
+		document.getElementById('example-file').value = null;
 	}
 	;
 
 });
+
+app.directive("fileread", [
+	  function() {
+	    return {
+	      scope: {
+	        fileread: "="
+	      },
+	      link: function(scope, element, attributes) {
+	        element.bind("change", function(changeEvent) {
+	          var reader = new FileReader();
+	          reader.onload = function(loadEvent) {
+	            scope.$apply(function() {
+	              scope.fileread = loadEvent.target.result;
+	            });
+	          }
+	          reader.readAsDataURL(changeEvent.target.files[0]);
+	        });
+	      }
+	    }
+	  }
+	]);
+
+app.directive('fileModel', ['$parse', function ($parse) {
+    return {
+       restrict: 'A',
+       link: function(scope, element, attrs) {
+          var model = $parse(attrs.fileModel);
+          var modelSetter = model.assign;
+           
+          element.bind('change', function(){
+             scope.$apply(function(){
+                modelSetter(scope, element[0].files[0]);
+             });
+          });
+       }
+    };
+     
+}]);

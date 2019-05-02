@@ -1,4 +1,4 @@
-package QuanLyCuaHangMain.Model;
+package QuanLyCuaHangMain.Entity;
 
 import java.io.Serializable;
 
@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -37,13 +36,6 @@ public class Product implements Serializable {
 		Name = name;
 		Description = description;
 		URL = uRL;
-	}
-	
-	public Product(ProductForm p) {
-		ID = p.getID();
-		Name = p.getName();
-		Description = p.getDescription();
-		URL = p.getURL();
 	}
 	
 	public int getID() {

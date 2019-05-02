@@ -16,19 +16,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import QuanLyCuaHangMain.DAO.ProductDAO;
-import QuanLyCuaHangMain.Model.Product;
-import QuanLyCuaHangMain.Model.ProductForm;
-import QuanLyCuaHangMain.Service.ProductService;
+import QuanLyCuaHangMain.Entity.Product;
+import QuanLyCuaHangMain.Repository.ProductRepository;
 
 @RestController
 public class MainRESTController {
 
-	@Autowired
-	private ProductDAO productDAO;
 
 	@Autowired
-	private ProductService productService;
+	private ProductRepository productService;
 
 	// Get all
 	@RequestMapping(value = "/products", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -36,15 +32,6 @@ public class MainRESTController {
 	public List<Product> getAllProduct() {
 		List<Product> list = productService.findAll();
 		return list;
-	}
-
-	// Get product by ID
-	@RequestMapping(value = "/product/{productID}", //
-			method = RequestMethod.GET, //
-			produces = { MediaType.APPLICATION_JSON_VALUE })
-	@ResponseBody
-	public Product getProductByID(@PathVariable("productID") Integer productID) {
-		return productDAO.getProductByID(productID);
 	}
 
 	// Add product
@@ -56,14 +43,12 @@ public class MainRESTController {
 
 		try {
 			JSONObject obj = new JSONObject(pdf);
-			// ProductForm productform = new ProductForm();
 
 			String name = obj.getString("Name");
 			String des = obj.getString("Description");
 			String url = obj.getString("URL");
 			Product product = new Product(name, des, url);
 
-			// return productDAO.addProduct(productform);
 			return productService.save(product);
 
 		} catch (JSONException e) {
